@@ -9,6 +9,7 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 import pandas as pd
 
+
 def authenticate_bq(acct):
     """
     Authenticate to Google BigQuery personal trial service account.
@@ -24,6 +25,7 @@ def authenticate_bq(acct):
     )
     client = bigquery.Client(credentials=credentials,project=credentials.project_id)
     return client,credentials
+
 
 def check_dataset(client,project_id,dataset_name):
     """
@@ -105,8 +107,7 @@ def bq_write(df,credentials,dataset_name,table_name,client,date_field='timestamp
     return success,error
 
 
-
-def secrets_configs(secret = 'secrets.json',config = 'config.json'):
+def secrets_configs(secret,config = 'config.json'):
     """
     Load secrets and configuration which are json files.
 
@@ -125,7 +126,8 @@ def secrets_configs(secret = 'secrets.json',config = 'config.json'):
     table_name = config['tm_table']
     return secrets,dataset_name,table_name
 
-def write_process(df):
+
+def write_process(df,secret):
     """
     Main algorithm for writing a table in Google Bigquery. this contains the
     functions described above
@@ -136,11 +138,12 @@ def write_process(df):
     Returns:
     tuple: A tuple containing success (bool) and an error message (str).
     """
-    secrets,dataset_name,table_name = secrets_configs()
+    secrets,dataset_name,table_name = secrets_configs(secret)
     client,credentials = authenticate_bq(secrets)
     check_dataset(client,credentials.project_id,dataset_name)
     success,error = bq_write(df,credentials,dataset_name,table_name,client)
     return success,error
+
 
 def generate_table_id(credentials,dataset_name,table_name):
     """
@@ -157,7 +160,8 @@ def generate_table_id(credentials,dataset_name,table_name):
     """
     return f'{credentials.project_id}.{dataset_name}.{table_name}'
 
-def query_bq_table():
+
+def query_bq_table(secret):
     """
     Query an entire table in GBQ. Although it's not standard to query
     an entire table, I thought it would be better to cache the query result
@@ -166,7 +170,7 @@ def query_bq_table():
     Returns:
     pd.DataFrame: The queried data as a DataFrame.
     """
-    secrets,dataset_name,table_name = secrets_configs()
+    secrets,dataset_name,table_name = secrets_configs(secret)
     client,credentials = authenticate_bq(secrets)
     table_id = generate_table_id(credentials,dataset_name,table_name)
     query_str = f"""
