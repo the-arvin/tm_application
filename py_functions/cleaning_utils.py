@@ -136,7 +136,7 @@ def construct_projects_df(df):
     >>> construct_projects_df(df)
     # Projects DataFrame
     """
-    projects_df = df.project.value_counts().reset_index()
+    projects_df = df_project.value_counts().reset_index()
     cols = projects_df.columns
     projects_df.columns = ['index']+cols[1:]
     projects_df['soundex'] = projects_df['index'].map(soundex)
