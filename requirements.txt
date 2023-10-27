@@ -1,0 +1,9 @@
+google-cloud-bigquery
+google-auth
+pandas
+dateparser
+jellyfish
+fuzzywuzzy
+streamlit
+plotly
+pyarrow
