@@ -138,8 +138,7 @@ def construct_projects_df(df):
     """
     projects_df = df.project.value_counts()
     projects_df = projects_df.reset_index()
-    cols = projects_df.columns
-    projects_df.columns = ['index']+cols[1:]
+    projects_df = projects_df.rename(columns = {'project':'index'})
     projects_df['soundex'] = projects_df['index'].map(soundex)
     projects_df = projects_df.sort_values(by=['soundex','project'])
     
