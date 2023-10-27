@@ -7,4 +7,4 @@ fuzzywuzzy
 streamlit
 plotly
 pyarrow
-db_dtypes
+db-dtypes
