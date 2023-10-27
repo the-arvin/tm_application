@@ -213,7 +213,6 @@ if __name__ == '__main__':
     else:
         # cleaned dataframe is loaded into the session state
         df = df.session_state['df']
-    st.write(df.project.value_counts().reset_index())
     response = ''
     success = True
     error = None
