@@ -209,7 +209,7 @@ if __name__ == '__main__':
     
     if st.session_state['from_csv'] == 0:
         # automatically queries bigquery table unless CSV is loaded
-        df = gather_bqdata(st.session_state['i'])
+        df = gather_bqdata(st.session_state['i'],secret)
     else:
         # cleaned dataframe is loaded into the session state
         df = df.session_state['df']
@@ -244,7 +244,7 @@ if __name__ == '__main__':
         if st.button('Load Now!'):
             #If button is clicked, the reloading of bgq data proceeds
             st.session_state['i'] +=1
-            df = gather_bqdata(st.session_state['i'])
+            df = gather_bqdata(st.session_state['i'],secret)
             st.session_state['from_csv'] = 0
         st.markdown(""" --- """)
     
