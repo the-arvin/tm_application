@@ -35,6 +35,7 @@ def generate_url(csv_link):
     source_id = csv_link.split('/')[-2]
     return f'https://drive.google.com/uc?id={source_id}'
 
+
 def custom_parser(unparsed_timestamp):
     """
     Customized timestamp parser to handle various timestamp formats.
@@ -59,6 +60,7 @@ def custom_parser(unparsed_timestamp):
             return dateparser.parse(unparsed_timestamp)
         except ValueError:
             return pd.NaT
+
 
 def load_csv(url): # add try except
     """
@@ -141,6 +143,7 @@ def construct_projects_df(df):
     projects_df['shifted'] = projects_df['index'].shift(1)
     projects_df['similarity_score'] = projects_df.apply(lambda row: calculate_similarity(row['index'], row['shifted']), axis=1)
     return projects_df
+        
 
 def process_group(df_temp, correction_dict):
     """
@@ -163,6 +166,7 @@ def process_group(df_temp, correction_dict):
     for entry in elements:
         correction_dict[entry] = df_temp['index'].iloc[0]
     return correction_dict
+
 
 def generate_correction_dict(df):
     """
@@ -216,6 +220,7 @@ def generate_correction_dict(df):
     if df_temp:
         correction_dict = process_group(df_temp, correction_dict)
     return correction_dict
+        
 
 def make_naive(x):
     """
@@ -236,6 +241,7 @@ def make_naive(x):
         pass
     return x
 
+
 def apply_correction(correction_dict, value):
     """
     Apply corrections to a project name using the correction dictionary.
@@ -255,6 +261,7 @@ def apply_correction(correction_dict, value):
     except KeyError:
         pass
     return value
+
 
 def cleaning_process(hard_coded_link):
     """
