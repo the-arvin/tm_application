@@ -18,7 +18,7 @@ st.session_state['i'] = 0
 st.session_state['from_csv'] = 0
 
 @st.cache_data
-def gather_bqdata(i,secret):
+def gather_bqdata(i,_secret):
     """
     Gather data from BigQuery based on an index with a caching decorator. 
     The index is necessary in order for the function to proceed when 
@@ -209,8 +209,7 @@ if __name__ == '__main__':
     
     if st.session_state['from_csv'] == 0:
         # automatically queries bigquery table unless CSV is loaded
-        i = st.session_state['i']
-        df = gather_bqdata(i,secret)
+        df = gather_bqdata(0,secret)
     else:
         # cleaned dataframe is loaded into the session state
         df = df.session_state['df']
