@@ -8,3 +8,4 @@ streamlit
 plotly
 pyarrow
 db-dtypes
+google-cloud-bigquery[pandas]==2.34.3
