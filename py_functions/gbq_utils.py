@@ -107,7 +107,7 @@ def bq_write(df,credentials,dataset_name,table_name,client,date_field='timestamp
     return success,error
 
 
-def secrets_configs(secret,config = 'config.json'):
+def secrets_configs(config = 'config.json'):
     """
     Load secrets and configuration which are json files.
 
@@ -118,13 +118,11 @@ def secrets_configs(secret,config = 'config.json'):
     Returns:
     tuple: A tuple containing secrets (dict), dataset_name (str), and table_name (str).
     """
-    secrets = open('secrets.json')
-    secrets = json.load(secrets)
     config = open('config.json')
     config = json.load(config)
     dataset_name = config['tm_dataset']
     table_name = config['tm_table']
-    return secrets,dataset_name,table_name
+    return dataset_name,table_name
 
 
 def write_process(df,secret):
@@ -138,8 +136,8 @@ def write_process(df,secret):
     Returns:
     tuple: A tuple containing success (bool) and an error message (str).
     """
-    secrets,dataset_name,table_name = secrets_configs(secret)
-    client,credentials = authenticate_bq(secrets)
+    dataset_name,table_name = secrets_configs()
+    client,credentials = authenticate_bq(secret)
     check_dataset(client,credentials.project_id,dataset_name)
     success,error = bq_write(df,credentials,dataset_name,table_name,client)
     return success,error
@@ -170,8 +168,8 @@ def query_bq_table(secret):
     Returns:
     pd.DataFrame: The queried data as a DataFrame.
     """
-    secrets,dataset_name,table_name = secrets_configs(secret)
-    client,credentials = authenticate_bq(secrets)
+    dataset_name,table_name = secrets_configs()
+    client,credentials = authenticate_bq(secret)
     table_id = generate_table_id(credentials,dataset_name,table_name)
     query_str = f"""
                 SELECT * FROM `{table_id}`
@@ -183,8 +181,8 @@ def query_bq_table(secret):
 # Sample implementation
 # """
 if __name__ == '__main__':
-    secrets,dataset_name,table_name = secrets_configs()
-    client,credentials = authenticate_bq(secrets)
+    dataset_name,table_name = secrets_configs()
+    client,credentials = authenticate_bq(secret)
     check_dataset(client,credentials.project_id,dataset_name)
     df = pd.DataFrame()
     success,error = bq_write(df,credentials,dataset_name,table_name,client)
